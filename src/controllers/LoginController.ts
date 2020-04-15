@@ -1,4 +1,5 @@
 import express from "express";
+import bcrypt from "bcrypt";
 import IUser from "../interfaces/IUser";
 import userModel from "../models/User";
 
@@ -37,17 +38,24 @@ export const createUser = async (
     if (existingUser !== null) {
       return res
         .status(400)
-        .json({ message: "That username is already in use." });
+        .json({ message: "That username is already in use." })
+        .send();
     }
 
+    const hashedPassword: string = await bcrypt.hash(user.password, 10);
+
     // Create the new user
-    await userModel.create(user);
-    return res.status(201).json({ message: "Created account." });
+    await userModel.create({
+      username: user.username,
+      password: hashedPassword,
+    });
+    return res.status(201).json({ message: "Created account." }).send();
   } catch (e) {
     // Error creating user
     console.log(e);
     return res
       .status(400)
-      .json({ message: "There was an error creating your account." });
+      .json({ message: "There was an error creating your account." })
+      .send();
   }
 };

@@ -7,18 +7,21 @@ export interface ITestModel extends mongoose.Model<IUser> {
   findByUsername(username: string): Promise<IUser>;
 }
 
-const userSchema: mongoose.Schema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
+const userSchema: mongoose.Schema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 userSchema.statics.findByUsername = async function (username: string) {
   const user: IUser = await this.findOne({
