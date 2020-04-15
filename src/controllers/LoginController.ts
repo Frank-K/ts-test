@@ -16,6 +16,35 @@ const validateUser = (user: IUser) => {
   return true;
 };
 
+export const userExists = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const username: string = req.body.username;
+
+  if (username === undefined || username === null) {
+    return res.status(400).json({ message: "Invalid username." }).send();
+  }
+
+  try {
+    // Check if user already exists
+    const existingUser: IUser = await userModel.findOne({
+      username,
+    });
+
+    if (existingUser === null) {
+      return res.status(200).json({ exists: false }).send();
+    }
+
+    return res.status(200).json({ exists: true }).send();
+  } catch (e) {
+    console.log(e);
+    return res
+      .status(400)
+      .json({ message: "There was an error checking this user." });
+  }
+};
+
 export const createUser = async (
   req: express.Request,
   res: express.Response
