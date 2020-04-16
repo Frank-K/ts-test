@@ -5,11 +5,19 @@ import userModel from "../models/User";
 
 // Return true if user is a valid UserInformation interface
 const validateUser = (user: IUser) => {
-  if (user.password === undefined || user.password == null) {
+  if (
+    user.password === undefined ||
+    user.password == null ||
+    user.password.length === 0
+  ) {
     return false;
   }
 
-  if (user.username === undefined || user.username == null) {
+  if (
+    user.username === undefined ||
+    user.username == null ||
+    user.username.length === 0
+  ) {
     return false;
   }
 
@@ -22,7 +30,7 @@ export const userExists = async (
 ) => {
   const username: string = req.body.username;
 
-  if (username === undefined || username === null) {
+  if (username === undefined || username === null || username.length === 0) {
     return res.status(400).json({ message: "Invalid username." }).send();
   }
 
