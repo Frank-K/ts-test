@@ -1,7 +1,15 @@
 import mongoose from "mongoose";
 
-const connectDb = () => {
-  return mongoose.connect(process.env.DB_URI, { poolSize: 10 });
+export const connectDb = () => {
+  return mongoose.connect(process.env.DB_URI, {
+    poolSize: 10,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 };
 
-export default connectDb;
+export const disconnectDb = () => {
+  return mongoose.disconnect();
+};
+
+export default { connectDb, disconnectDb };
