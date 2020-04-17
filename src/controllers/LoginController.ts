@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import IUser from "../interfaces/IUser";
 import userModel from "../models/User";
+import jwt from "jsonwebtoken";
 
 // Return true if user is a valid UserInformation interface
 const validateUser = (user: IUser) => {
@@ -48,7 +49,7 @@ export const userExists = async (
   } catch (e) {
     console.log(e);
     return res
-      .status(400)
+      .status(500)
       .json({ message: "There was an error checking this user." });
   }
 };
@@ -91,8 +92,63 @@ export const createUser = async (
     // Error creating user
     console.log(e);
     return res
-      .status(400)
+      .status(500)
       .json({ message: "There was an error creating your account." })
+      .send();
+  }
+};
+
+export const loginUser = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const user: IUser = req.body;
+
+  if (!validateUser(user)) {
+    return res
+      .status(400)
+      .json({ message: "Invalid user object sent to server." })
+      .send();
+  }
+
+  try {
+    // Check if user already exists
+    const existingUser: IUser = await userModel.findOne({
+      username: user.username,
+    });
+
+    if (existingUser === null) {
+      return res
+        .status(400)
+        .json({ message: "Invalid username provided." })
+        .send();
+    }
+
+    // Compare the passwords
+    const match: boolean = await bcrypt.compare(
+      user.password,
+      existingUser.password
+    );
+    if (!match) {
+      return res
+        .status(400)
+        .json({ message: "Invalid password provided." })
+        .send();
+    }
+
+    // Valid credentials
+    const token: string = jwt.sign(
+      { username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+    return res.status(200).json({ token }).send();
+  } catch (e) {
+    // Error
+    console.log(e);
+    return res
+      .status(500)
+      .json({ message: "There was an error logging in." })
       .send();
   }
 };

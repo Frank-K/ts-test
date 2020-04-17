@@ -13,5 +13,6 @@ app.get("/", (req: express.Request, res: express.Response) => {
 
 app.post("/users", loginController.createUser);
 app.post("/users/exist", loginController.userExists);
+app.post("/users/login", loginController.loginUser);
 
 export default app;
