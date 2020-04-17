@@ -23,7 +23,7 @@ describe("Tests for the /users route", () => {
       username: "new_user",
       password: "new_password",
     });
-    expect(res.statusCode).toEqual(200);
+    expect(res.statusCode).toEqual(201);
   });
 
   test("Existing username in the database", async () => {
@@ -39,7 +39,7 @@ describe("Tests for the /users route", () => {
       username: "FRANK123",
       password: "new_password",
     });
-    expect(res.statusCode).toEqual(200);
+    expect(res.statusCode).toEqual(201);
   });
 
   test("Empty string username", async () => {
