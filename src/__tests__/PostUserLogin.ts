@@ -30,7 +30,7 @@ describe("Tests for the /users/login route", () => {
       password: "test123",
     });
     expect(res.statusCode).toEqual(200);
-    expect(res).toHaveProperty("token");
+    expect(res.body).toHaveProperty("token");
   });
 
   test("Invalid username", async () => {
