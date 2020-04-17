@@ -4,6 +4,8 @@ node_js:
 cache:
   directories:
     - "node_modules"
+env:
+  - JWT_SECRET=AEkli94tscZlg4a0oORnYzR76PuczYTB
 services:
   - mongodb
 before_script:
