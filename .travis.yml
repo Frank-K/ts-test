@@ -4,5 +4,10 @@ node_js:
 cache:
   directories:
     - "node_modules"
+services:
+  - mongodb
+before_script:
+  - sleep 15
 script:
   - npx prettier --check "src/**/*.ts"
+  - npx jest -i
