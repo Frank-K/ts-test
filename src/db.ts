@@ -1,17 +1,21 @@
 import mongoose from "mongoose";
 
 export const connectDb = () => {
-  // Travis CI database for testing
+  let URI = null;
+
   if (process.env.TRAVIS === "true") {
-    return mongoose.connect("mongodb://localhost:27017/myapp", {
-      useNewUrlParser: true,
-    });
+    // Travis CI database for testing
+    URI = "mongodb://localhost:27017/myapp";
+  } else {
+    URI = process.env.DB_URI;
   }
 
-  return mongoose.connect(process.env.DB_URI, {
+  return mongoose.connect(URI, {
     poolSize: 10,
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
   });
 };
 
